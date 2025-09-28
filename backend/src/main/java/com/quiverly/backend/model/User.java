@@ -1,11 +1,10 @@
 package com.quiverly.backend.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table
@@ -18,6 +17,10 @@ public class User {
     private String email;
     private LocalDateTime createdAt = LocalDateTime.now();
 
+    //matches field in Surfboard that points to user
+    //cascadeType ensures that surfboards dissapear when a user is deleted
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
+    private List<Surfboard> surfboards = new ArrayList<>();
 
     public User(){
 
