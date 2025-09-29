@@ -1,5 +1,6 @@
 package com.quiverly.backend.service;
 
+import com.quiverly.backend.exception.DuplicateEmailException;
 import com.quiverly.backend.model.User;
 import com.quiverly.backend.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -23,7 +24,7 @@ public class UserService {
     public void addNewUser(User user){
         Optional<User> userOptional = userRepository.findUserByEmail(user.getEmail()); //need to implement findUserByEmail query
         if (userOptional.isPresent()){
-            throw new IllegalStateException("Email is already taken");
+            throw new DuplicateEmailException(user.getEmail());
         }
         userRepository.save(user);
         System.out.println(user);
@@ -44,7 +45,7 @@ public class UserService {
         if (username != null && !username.isEmpty() && !Objects.equals(user.getEmail(), email)){
             Optional<User> userOptional = userRepository.findUserByEmail(email);
             if (userOptional.isPresent()){
-                throw new IllegalStateException("The email " + email + " is taken!");
+                throw new DuplicateEmailException(user.getEmail());
             }
             user.setEmail(email);
         }

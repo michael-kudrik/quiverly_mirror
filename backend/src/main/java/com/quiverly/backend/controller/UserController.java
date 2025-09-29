@@ -2,6 +2,7 @@ package com.quiverly.backend.controller;
 
 import com.quiverly.backend.model.User;
 import com.quiverly.backend.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +25,7 @@ public class UserController {
     }
 
     @PostMapping
-    public void registerNewUser(@RequestBody User user){
+    public void registerNewUser(@Valid @RequestBody User user){
         userService.addNewUser(user);
     }
 

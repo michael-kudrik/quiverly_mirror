@@ -1,6 +1,9 @@
 package com.quiverly.backend.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.Positive;
 
 import java.time.LocalDate;
 
@@ -11,12 +14,17 @@ public class Surfboard {
     @Id
     @GeneratedValue
     private Long id;
-
+    @NotBlank
     private String model;
+
     private String shaper;
+    @Positive
     private Double length;
+    @Positive
     private Double width;
+    @Positive
     private Double volume;
+    @PastOrPresent
     private LocalDate purchasedAt;
 
     @ManyToOne

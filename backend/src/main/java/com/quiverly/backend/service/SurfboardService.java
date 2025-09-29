@@ -1,10 +1,12 @@
 package com.quiverly.backend.service;
 
+import com.quiverly.backend.exception.SurfboardNotFoundException;
 import com.quiverly.backend.model.Surfboard;
 import com.quiverly.backend.repository.SurfboardRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -21,6 +23,9 @@ public class SurfboardService {
     public List<Surfboard> getSurfboards(){
         return surfboardRepository.findAll();
     }
+    public List<Surfboard> getSurfboardsByUser(Long userId){
+        return surfboardRepository.findAllByOwnerId(userId);
+    }
 
     public void addNewSurfboard(Surfboard surfboard){
         if (surfboard.getOwner() == null){
@@ -31,7 +36,7 @@ public class SurfboardService {
 
     public void deleteSurfboard(Long surfboardId){
         if (!surfboardRepository.existsById(surfboardId)){
-            throw new IllegalStateException("Surfboard with id " + surfboardId + " does not exist!");
+            throw new SurfboardNotFoundException(surfboardId);
         }
         surfboardRepository.deleteById(surfboardId);
     }
