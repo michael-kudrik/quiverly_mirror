@@ -19,9 +19,9 @@ public class User {
     private Long id;
     @NotBlank
     private String username;
-    @NotBlank
-    @Size(min = 8, max = 64)
-    @Pattern(regexp = "^(?=.*[0-9])(?=.*[A-Z]).*$", message = "Password must have at least one uppercase letter and one number")
+   // @NotBlank
+  //  @Size(min = 8, max = 64)
+  //  @Pattern(regexp = "^(?=.*[0-9])(?=.*[A-Z]).*$", message = "Password must have at least one uppercase letter and one number")
     private String password;
     @NotBlank
     @Email
