@@ -4,14 +4,11 @@ import com.quiverly.backend.model.Surfboard;
 import com.quiverly.backend.service.SurfboardService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "api/v1/surfboard")
+@RequestMapping(path = "/api/v1/surfboard")
 public class SurfboardController {
 
     private final SurfboardService surfboardService;

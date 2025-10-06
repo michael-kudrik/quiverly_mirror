@@ -14,14 +14,16 @@ import java.util.List;
 @Entity
 @Table
 public class User {
+    @Enumerated(EnumType.STRING)
+    private Role role;
     @Id
     @GeneratedValue
     private Long id;
     @NotBlank
     private String username;
-   // @NotBlank
-  //  @Size(min = 8, max = 64)
-  //  @Pattern(regexp = "^(?=.*[0-9])(?=.*[A-Z]).*$", message = "Password must have at least one uppercase letter and one number")
+    @NotBlank
+    @Size(min = 8, max = 64)
+    @Pattern(regexp = "^(?=.*[0-9])(?=.*[A-Z]).*$", message = "Password must have at least one uppercase letter and one number")
     private String password;
     @NotBlank
     @Email
@@ -30,10 +32,10 @@ public class User {
     private LocalDateTime createdAt = LocalDateTime.now();
 
     //matches field in Surfboard that points to user
-    //cascadeType ensures that surfboards dissapear when a user is deleted
+    //cascadeType ensures that surfboards disappear when a user is deleted
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<Surfboard> surfboards = new ArrayList<>();
+    private final List<Surfboard> surfboards = new ArrayList<>();
 
     public User(){
 
@@ -45,8 +47,20 @@ public User(Long id, String username, String password, String email, LocalDateTi
     this.password = password;
     this.email = email;
     this.createdAt = createdAt;
-
+    this.role = Role.USER;
 }
+
+    public enum Role{
+        USER, ADMIN
+    }
+
+    public Role getRole(){
+        return role;
+    }
+
+    public void setRole(Role role){
+        this.role = role;
+    }
 
     public Long getId() {
         return id;

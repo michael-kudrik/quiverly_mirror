@@ -17,15 +17,13 @@ public class BackendApplication {
     @Bean
     CommandLineRunner commandLineRunner(UserRepository repository, UserRepository userRepository) {
         return args -> {
-            User user = new User();
-            user.setUsername("testmike");
-            user.setEmail("mike@mikekudrik.boats");
+//            User user = new User();
+//            user.setUsername("testmike");
+//            user.setEmail("mike@mikekudrik.boats");
+//
+//            userRepository.save(user);
 
-            userRepository.save(user);
-
-            userRepository.findAll().forEach(u -> {
-                System.out.println(u.getId() + ": " + u.getUsername() + ", " + u.getEmail());
-            });
+            userRepository.findAll().forEach(u -> System.out.println(u.getId() + ": " + u.getUsername() + ", " + u.getEmail()));
 
         };
     }

@@ -14,7 +14,7 @@ import java.util.HashMap;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    //handles validation errors
+    //handle validation errors
     @ExceptionHandler
     public Map<String, String> handleValidationErrors(MethodArgumentNotValidException ex){
         Map<String,String> errors = new HashMap<>();
@@ -27,7 +27,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }
 
-    // Handle surfboard not found
+    // handle surfboard not found
     @ExceptionHandler(SurfboardNotFoundException.class)
     public ResponseEntity<String> handleSurfboardNotFound(SurfboardNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());

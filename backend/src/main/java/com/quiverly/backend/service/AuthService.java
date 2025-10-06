@@ -29,12 +29,12 @@ public class AuthService {
 
     public String login(String username, String rawPassword) {
         try {
-            // Authenticate credentials
+            // authenticate credentials
             Authentication auth = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(username, rawPassword)
             );
 
-            // If successful, generate JWT
+            // if successful, generate JWT
             User user = userRepository.findByUsername(username)
                     .orElseThrow(() -> new RuntimeException("User not found"));
 

@@ -21,51 +21,42 @@ public class UserService {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
-    public List<User> getUsers(){ return userRepository.findAll();}
 
-    public void addNewUser(User user){
+    public List<User> getUsers() {
+        return userRepository.findAll();
+    }
+
+    public void addNewUser(User user) {
         Optional<User> userOptional = userRepository.findUserByEmail(user.getEmail()); //need to implement findUserByEmail query
-        if (userOptional.isPresent()){
+        if (userOptional.isPresent()) {
             throw new DuplicateEmailException(user.getEmail());
+        }
+        if (user.getRole() == null) {
+            user.setRole(User.Role.USER);
         }
         user.setPassword(passwordEncoder.encode(user.getPassword())); //encrypt password
         userRepository.save(user);
         System.out.println(user);
     }
 
-    public void deleteUser(Long userId){
+    public void deleteUser(Long userId) {
         boolean exists = userRepository.existsById(userId);
-        if(!exists){
+        if (!exists) {
             throw new IllegalStateException("User with id: " + userId + " does not exist!");
         }
         userRepository.deleteById(userId);
     }
 
     @Transactional
-    public void updateUser(Long userId, String username, String email){
-        User user = userRepository.findById(userId).orElseThrow(()-> new IllegalStateException("User with id: " + userId + " does not exist!"));
+    public void updateUser(Long userId, String username, String email) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalStateException("User with id: " + userId + " does not exist!"));
 
-        if (username != null && !username.isEmpty() && !Objects.equals(user.getEmail(), email)){
+        if (username != null && !username.isEmpty() && !Objects.equals(user.getEmail(), email)) {
             Optional<User> userOptional = userRepository.findUserByEmail(email);
-            if (userOptional.isPresent()){
+            if (userOptional.isPresent()) {
                 throw new DuplicateEmailException(user.getEmail());
             }
             user.setEmail(email);
         }
-    }
-
-    public User authenticate(String usernameOrEmail, String rawPassword){
-        Optional<User> userOpt = userRepository.findUserByEmail(usernameOrEmail);
-
-        if (userOpt.isEmpty()){
-            userOpt = userRepository.findUserByEmail(usernameOrEmail);
-        }
-
-        User user = userOpt.orElseThrow(() -> new IllegalArgumentException("Invalid username/email or password!"));
-
-        if (!passwordEncoder.matches(rawPassword, user.getPassword())){
-            throw new IllegalArgumentException("Invalid username/email or password");
-        }
-        return user;
     }
 }
