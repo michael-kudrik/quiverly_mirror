@@ -6,99 +6,87 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table
+@Table(name = "users")
 public class User {
+
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private Role role = Role.USER; // Set default role here
+
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
     @NotBlank
+    @Column(unique = true) // Username should be unique
     private String username;
+
     @NotBlank
     @Size(min = 8, max = 64)
     @Pattern(regexp = "^(?=.*[0-9])(?=.*[A-Z]).*$", message = "Password must have at least one uppercase letter and one number")
     private String password;
+
     @NotBlank
     @Email
+    @Column(unique = true) // Email should be unique
     private String email;
 
-    private LocalDateTime createdAt = LocalDateTime.now();
+    @CreationTimestamp // This tells Hibernate 7 to generate the timestamp automatically on INSERT
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
 
-    //matches field in Surfboard that points to user
-    //cascadeType ensures that surfboards disappear when a user is deleted
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     @JsonIgnore
     private final List<Surfboard> surfboards = new ArrayList<>();
 
-    public User(){
-
-}
-
-public User(Long id, String username, String password, String email, LocalDateTime createdAt) {
-    this.id = id;
-    this.username = username;
-    this.password = password;
-    this.email = email;
-    this.createdAt = createdAt;
-    this.role = Role.USER;
-}
-
-    public enum Role{
-        USER, ADMIN
+    public User() {
     }
 
-    public Role getRole(){
-        return role;
-    }
-
-    public void setRole(Role role){
-        this.role = role;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
+    // Fixed constructor: remove createdAt from arguments, let Hibernate handle it
+    public User(String username, String password, String email) {
         this.username = username;
-    }
-
-    public String getPassword(){
-        return password;
-    }
-
-    public void setPassword(String password){
         this.password = password;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
         this.email = email;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+    public enum Role {
+        USER, ADMIN
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
+    // --- GETTERS AND SETTERS ---
+
+    public Role getRole() { return role; }
+    public void setRole(Role role) { this.role = role; }
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public String getUsername() { return username; }
+    public void setUsername(String username) { this.username = username; }
+
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
+
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+
+    public LocalDateTime getCreatedAt() { return createdAt; }
+
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", role=" + role +
+                ", createdAt=" + createdAt +
+                '}';
     }
 }

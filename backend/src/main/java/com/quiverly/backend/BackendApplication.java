@@ -1,6 +1,5 @@
 package com.quiverly.backend;
 
-import com.quiverly.backend.model.User;
 import com.quiverly.backend.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -15,8 +14,8 @@ public class BackendApplication {
     }
 
     @Bean
-    CommandLineRunner commandLineRunner(UserRepository repository, UserRepository userRepository) {
-        return args -> {
+    CommandLineRunner commandLineRunner(UserRepository userRepository) {
+        return _ -> {
 //            User user = new User();
 //            user.setUsername("testmike");
 //            user.setEmail("mike@mikekudrik.boats");
