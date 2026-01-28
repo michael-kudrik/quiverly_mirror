@@ -37,7 +37,7 @@ public class User {
     @Column(unique = true) // Email should be unique
     private String email;
 
-    @CreationTimestamp // This tells Hibernate 7 to generate the timestamp automatically on INSERT
+    @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
@@ -48,7 +48,6 @@ public class User {
     public User() {
     }
 
-    // Fixed constructor: remove createdAt from arguments, let Hibernate handle it
     public User(String username, String password, String email) {
         this.username = username;
         this.password = password;
