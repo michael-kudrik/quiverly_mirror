@@ -1,6 +1,7 @@
 package com.quiverly.backend.service;
 
 import com.quiverly.backend.exception.DuplicateEmailException;
+import com.quiverly.backend.exception.DuplicateUsernameException;
 import com.quiverly.backend.model.User;
 import com.quiverly.backend.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -27,10 +28,16 @@ public class UserService {
     }
 
     public void addNewUser(User user) {
-        Optional<User> userOptional = userRepository.findUserByEmail(user.getEmail()); //need to implement findUserByEmail query
-        if (userOptional.isPresent()) {
+        Optional<User> userEmailOptional = userRepository.findUserByEmail(user.getEmail());
+        if (userEmailOptional.isPresent()) {
             throw new DuplicateEmailException(user.getEmail());
         }
+
+        Optional<User> userUsernameOptional = userRepository.findByUsername(user.getUsername());
+        if (userUsernameOptional.isPresent()) {
+            throw new DuplicateUsernameException(user.getUsername());
+        }
+
         if (user.getRole() == null) {
             user.setRole(User.Role.USER);
         }
@@ -51,10 +58,18 @@ public class UserService {
     public void updateUser(Long userId, String username, String email) {
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalStateException("User with id: " + userId + " does not exist!"));
 
-        if (username != null && !username.isEmpty() && !Objects.equals(user.getEmail(), email)) {
-            Optional<User> userOptional = userRepository.findUserByEmail(email);
-            if (userOptional.isPresent()) {
-                throw new DuplicateEmailException(user.getEmail());
+        if (username != null && !username.isEmpty() && !Objects.equals(user.getUsername(), username)) {
+            Optional<User> userByUsername = userRepository.findByUsername(username);
+            if (userByUsername.isPresent()) {
+                throw new DuplicateUsernameException(username);
+            }
+            user.setUsername(username);
+        }
+
+        if (email != null && !email.isEmpty() && !Objects.equals(user.getEmail(), email)) {
+            Optional<User> userByEmail = userRepository.findUserByEmail(email);
+            if (userByEmail.isPresent()) {
+                throw new DuplicateEmailException(email);
             }
             user.setEmail(email);
         }

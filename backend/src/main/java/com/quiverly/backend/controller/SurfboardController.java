@@ -24,7 +24,7 @@ public class SurfboardController {
     }
 
     @GetMapping(path="/user/{userId}")
-    public List<Surfboard> getSurfboardsByUser(@PathVariable("userId")Long userId){
+    public List<Surfboard> getSurfboardsByUser(@PathVariable Long userId){
         return surfboardService.getSurfboardsByUser(userId);
     }
 
@@ -34,7 +34,7 @@ public class SurfboardController {
     }
 
     @DeleteMapping(path="{surfboardId}")
-    public void deleteSurfboard(@PathVariable("surfboardId") Long surfboardId){
+    public void deleteSurfboard(@PathVariable Long surfboardId){
         surfboardService.deleteSurfboard(surfboardId);
     }
 

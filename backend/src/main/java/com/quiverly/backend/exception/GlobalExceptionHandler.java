@@ -23,13 +23,21 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(DuplicateEmailException.class)
-    public ResponseEntity<String> handleDuplicateEmail(DuplicateEmailException ex){
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    public ResponseEntity<com.quiverly.backend.dto.ErrorResponse> handleDuplicateEmail(DuplicateEmailException ex){
+        com.quiverly.backend.dto.ErrorResponse error = new com.quiverly.backend.dto.ErrorResponse(ex.getMessage(), HttpStatus.CONFLICT.value());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    }
+
+    @ExceptionHandler(DuplicateUsernameException.class)
+    public ResponseEntity<com.quiverly.backend.dto.ErrorResponse> handleDuplicateUsername(DuplicateUsernameException ex){
+        com.quiverly.backend.dto.ErrorResponse error = new com.quiverly.backend.dto.ErrorResponse(ex.getMessage(), HttpStatus.CONFLICT.value());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
     }
 
     // handle surfboard not found
     @ExceptionHandler(SurfboardNotFoundException.class)
-    public ResponseEntity<String> handleSurfboardNotFound(SurfboardNotFoundException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    public ResponseEntity<com.quiverly.backend.dto.ErrorResponse> handleSurfboardNotFound(SurfboardNotFoundException ex) {
+        com.quiverly.backend.dto.ErrorResponse error = new com.quiverly.backend.dto.ErrorResponse(ex.getMessage(), HttpStatus.NOT_FOUND.value());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 }

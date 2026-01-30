@@ -36,8 +36,7 @@ public class UserController {
 
     @PutMapping(path = "{userId}")
     public void updateUser(@PathVariable("userId") Long userId,
-                           @RequestParam(required = false) String username,
-                           @RequestParam(required = false) String email){
-        userService.updateUser(userId, username, email);
+                           @Valid @RequestBody com.quiverly.backend.dto.UserUpdateRequest request){
+        userService.updateUser(userId, request.getUsername(), request.getEmail());
     }
 }
