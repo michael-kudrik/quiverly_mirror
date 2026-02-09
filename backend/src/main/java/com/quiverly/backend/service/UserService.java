@@ -27,6 +27,11 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    public User getUserByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User with username " + username + " not found"));
+    }
+
     public void addNewUser(User user) {
         Optional<User> userEmailOptional = userRepository.findUserByEmail(user.getEmail());
         if (userEmailOptional.isPresent()) {
