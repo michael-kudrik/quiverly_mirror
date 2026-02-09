@@ -1,10 +1,14 @@
 package com.quiverly.backend.controller;
 
 import com.quiverly.backend.model.Surfboard;
+import com.quiverly.backend.model.User;
 import com.quiverly.backend.service.SurfboardService;
+import com.quiverly.backend.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -12,10 +16,12 @@ import java.util.List;
 public class SurfboardController {
 
     private final SurfboardService surfboardService;
+    private final UserService userService;
 
     @Autowired
-    public SurfboardController(SurfboardService surfboardService){
+    public SurfboardController(SurfboardService surfboardService, UserService userService){
         this.surfboardService = surfboardService;
+        this.userService = userService;
     }
 
     @GetMapping
@@ -29,7 +35,9 @@ public class SurfboardController {
     }
 
     @PostMapping
-    public void addSurfboard(@Valid @RequestBody Surfboard surfboard){
+    public void addSurfboard(@Valid @RequestBody Surfboard surfboard, Principal principal){
+        User user = userService.getUserByUsername(principal.getName());
+        surfboard.setOwner(user);
         surfboardService.addNewSurfboard(surfboard);
     }
 
