@@ -26,11 +26,11 @@ public class SurfboardService {
         return surfboardRepository.findAllByOwnerId(userId);
     }
 
-    public void addNewSurfboard(Surfboard surfboard){
+    public Surfboard addNewSurfboard(Surfboard surfboard){
         if (surfboard.getOwner() == null){
             throw new IllegalStateException("Surfboard must have an owner!");
         }
-        surfboardRepository.save(surfboard);
+        return surfboardRepository.save(surfboard);
     }
 
     public void deleteSurfboard(Long surfboardId){

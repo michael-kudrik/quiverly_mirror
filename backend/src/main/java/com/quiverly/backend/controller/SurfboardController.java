@@ -35,10 +35,10 @@ public class SurfboardController {
     }
 
     @PostMapping
-    public void addSurfboard(@Valid @RequestBody Surfboard surfboard, Principal principal){
+    public Surfboard addSurfboard(@Valid @RequestBody Surfboard surfboard, Principal principal){
         User user = userService.getUserByUsername(principal.getName());
         surfboard.setOwner(user);
-        surfboardService.addNewSurfboard(surfboard);
+        return surfboardService.addNewSurfboard(surfboard);
     }
 
     @DeleteMapping(path="{surfboardId}")
