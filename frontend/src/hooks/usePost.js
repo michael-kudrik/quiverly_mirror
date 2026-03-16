@@ -10,7 +10,7 @@ export default function usePost(url) {
     setError(null);
     setSuccess(false);
 
-const TEST_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb2JtYWNoIiwiaWF0IjoxNzcxNDQzMDk5LCJleHAiOjE3NzE0NDY2OTl9.Gs1WBkecQrIOqKtyBBEj20mStObXvnUeXCS4ILr6ULM"
+const TEST_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb2JtYWNoIiwiaWF0IjoxNzczNjgxMDc5LCJleHAiOjE3NzM2ODQ2Nzl9.fol8j0JFMNNq-_XsUpJMbZxdpCMrcFjk1Dv8BfTNmM4"
 
     try {
       const response = await fetch(url, {

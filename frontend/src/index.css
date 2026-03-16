@@ -1,8 +1,17 @@
 @import "tailwindcss";
 
+@font-face {
+    font-family: 'Neuland LT Std';
+    src: url('/src/fonts/NeulandLTStd.woff2') format('woff2');
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+}
+
 @theme {
     --color-night: #252422;
     --color-sand: #EBDBB2;
     --color-shingle: #F4F1DE;
     --color-ocean: #3D5A80;
+    --font-logo: "Neuland LT Std", ui-sans-serif, system-ui, sans-serif;
 }
