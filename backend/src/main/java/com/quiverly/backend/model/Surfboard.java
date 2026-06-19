@@ -12,7 +12,7 @@ import java.time.LocalDate;
 public class Surfboard {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY) //wait for the database to determine the new ID
     private Long id;
     @NotBlank
     private String model;
