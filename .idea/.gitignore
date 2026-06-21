@@ -3,3 +3,8 @@
 /workspace.xml
 # Editor-based HTTP Client requests
 /httpRequests/
+/dataSources/5de62828-aba2-415f-a2dc-66c00f66a9ef.xml
+/dataSources/data_sources_history.xml
+/dataSources.local.xml
+/dataSources.xml
+/dataSources/5de62828-aba2-415f-a2dc-66c00f66a9ef/storage_v2/_src_/schema/information_schema.FNRwLQ.meta
