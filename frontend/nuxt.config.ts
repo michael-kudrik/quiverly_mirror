@@ -11,5 +11,5 @@ export default defineNuxtConfig({
     plugins: [tailwindcss() as any],
   },
   css: ['./app/assets/main.css'],
-  modules: ['@pinia/nuxt', ]
+  modules: ['@pinia/nuxt', '@nuxt/fonts',],
 })
