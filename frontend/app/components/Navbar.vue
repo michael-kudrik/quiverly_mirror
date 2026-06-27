@@ -62,7 +62,7 @@ function handleLogout() {
             </a>
           </li>
           <li><a>Settings</a></li>
-          <li><a>Logout</a></li>
+          <li><a @click.prevent="handleLogout">Logout</a></li>
         </ul>
       </div>
     </div>
