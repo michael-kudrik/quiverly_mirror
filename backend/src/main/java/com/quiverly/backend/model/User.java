@@ -28,7 +28,7 @@ public class User {
     private String username;
 
     @NotBlank
-    @JsonIgnore
+    @com.fasterxml.jackson.annotation.JsonProperty(access = com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY)
     @Size(min = 8, max = 64)
     @Pattern(regexp = "^(?=.*[0-9])(?=.*[A-Z]).*$", message = "Password must have at least one uppercase letter and one number")
     private String password;
