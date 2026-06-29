@@ -61,7 +61,7 @@ function handleLogout() {
               Profile
             </a>
           </li>
-          <li><a>Settings</a></li>
+          <li><NuxtLink to="/settings">Settings</NuxtLink></li>
           <li><a @click.prevent="handleLogout">Logout</a></li>
         </ul>
       </div>
