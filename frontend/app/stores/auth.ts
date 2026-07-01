@@ -3,7 +3,8 @@ export const useAuthStore = defineStore('auth', () => {
     // nuxt built in useCookie syncs token state to the cookie
     const token = useCookie('token')
     //create a reference to store logged-in usernames. defaults to null and accepts string or null
-    const username = ref<string | null>(null)
+//    const username = ref<string | null>(null)
+    const username = useCookie<string>('username')
 
     const isLoggedIn = computed(() => !!token.value)
 
