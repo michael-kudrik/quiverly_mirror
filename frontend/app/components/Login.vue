@@ -94,10 +94,12 @@ async function handleLogin() {
                 <br />At least one number <br />At least one lowercase letter <br />At least one uppercase letter
               </p>
 
+              <div class="tooltip tooltip-right tooltip-secondary" data-tip="Minimal cookies used">
               <button type="submit" class="btn btn-primary w-full mt-6" :disabled="isLoading">
                 <span v-if="isLoading" class="loading loading-spinner"></span>
                 Login
               </button>
+                </div>
 
               <p v-if="errorMessage" class="text-error text-sm mt-2 text-center">
                 {{ errorMessage }}
