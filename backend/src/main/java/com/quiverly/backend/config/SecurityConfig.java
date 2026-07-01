@@ -23,12 +23,17 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception{
-        return authenticationConfiguration.getAuthenticationManager();
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) {
+        try {
+            return authenticationConfiguration.getAuthenticationManager();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, JwtAuthFilter jwtAuthFilter) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, JwtAuthFilter jwtAuthFilter) {
+        try {
         http
                 .cors(org.springframework.security.config.Customizer.withDefaults()) // Enable CORS!
                 .csrf(AbstractHttpConfigurer::disable) // ok for API + Postman; for browsers enable with cookies
@@ -38,13 +43,15 @@ public class SecurityConfig {
                         // public endpoints (match your controllers)
                         .requestMatchers("/api/auth/**").permitAll() //for login
                         .requestMatchers(HttpMethod.POST, "/api/v1/user/**").permitAll()        // registration
-                        .requestMatchers(HttpMethod.GET, "/api/v1/surfboard/**").permitAll() //public surfboard list maybe?
                         // authenticated user endpoints
+                        .requestMatchers(HttpMethod.GET, "/api/v1/surfboard/my-boards").authenticated()
+                        //public surfboard list maybe?
                         .requestMatchers(HttpMethod.POST, "/api/v1/surfboard/**").authenticated()
                         .requestMatchers(HttpMethod.PUT, "/api/v1/surfboard/**").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/surfboard/**").authenticated()
 
-                        // admin only hehe thats me lol 0_0
+                        .requestMatchers(HttpMethod.GET, "/api/v1/surfboard/**").permitAll() //public surfboard list maybe?
+                        // admin only hehe that's me lol 0_0
                         .requestMatchers("/api/v1/user/**").hasRole("ADMIN")
                         //all else requires authentication
                         .anyRequest().authenticated()
@@ -52,6 +59,9 @@ public class SecurityConfig {
                 .addFilterBefore(jwtAuthFilter, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class);
 
 
-        return http.build();
+            return http.build();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

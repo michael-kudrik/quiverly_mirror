@@ -29,9 +29,17 @@ public class SurfboardController {
         return surfboardService.getSurfboards();
     }
 
+    // might want to remove entirely somewhere down the road
     @GetMapping(path="/user/{userId}")
     public List<Surfboard> getSurfboardsByUser(@PathVariable Long userId){
         return surfboardService.getSurfboardsByUser(userId);
+    }
+
+    //                   lol this is called kebab-case
+    @GetMapping(path="/my-boards")
+    public List<Surfboard> getSurfboardsByUser(Principal principal){
+        User user = userService.getUserByUsername(principal.getName());
+        return surfboardService.getSurfboardsByUser(user.getId());
     }
 
     @PostMapping
