@@ -6,6 +6,8 @@ import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Positive;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "surfboards")
@@ -31,17 +33,24 @@ public class Surfboard {
     @JoinColumn(name = "user_id", nullable = false)
     private User owner;
 
-    public Surfboard(){
+    @OneToMany(mappedBy = "surfboard", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SurfboardImage> images = new ArrayList<>();
+
+    @OneToOne
+    @JoinColumn(name = "cover_image_id")
+    private SurfboardImage coverImage;
+
+    public Surfboard() {
 
     }
 
-    public Surfboard(String model, String shaper, Double length, Double width, Double volume, User owner){
+    public Surfboard(String model, String shaper, Double length, Double width, Double volume, User owner) {
         this.model = model;
-        this. shaper = shaper;
-        this. length = length;
+        this.shaper = shaper;
+        this.length = length;
         this.width = width;
         this.volume = volume;
-        this. owner = owner;
+        this.owner = owner;
         this.purchasedAt = LocalDate.now();
     }
 
@@ -107,6 +116,32 @@ public class Surfboard {
 
     public void setOwner(User owner) {
         this.owner = owner;
+    }
+
+    public List<SurfboardImage> getImages() {
+        return images;
+    }
+
+    public void setImages(List<SurfboardImage> images) {
+        this.images = images;
+    }
+
+    public SurfboardImage getCoverImage() {
+        return coverImage;
+    }
+
+    public void setCoverImage(SurfboardImage coverImage) {
+        this.coverImage = coverImage;
+    }
+
+    public void addImage(SurfboardImage image) {
+        this.images.add(image);
+        image.setSurfboard(this);
+    }
+
+    public void removeImage(SurfboardImage image) {
+        this.images.remove(image);
+        image.setSurfboard(null);
     }
 }
 
