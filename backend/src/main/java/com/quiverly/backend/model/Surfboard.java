@@ -36,10 +36,6 @@ public class Surfboard {
     @OneToMany(mappedBy = "surfboard", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SurfboardImage> images = new ArrayList<>();
 
-    @OneToOne
-    @JoinColumn(name = "cover_image_id")
-    private SurfboardImage coverImage;
-
     public Surfboard() {
 
     }
@@ -124,14 +120,6 @@ public class Surfboard {
 
     public void setImages(List<SurfboardImage> images) {
         this.images = images;
-    }
-
-    public SurfboardImage getCoverImage() {
-        return coverImage;
-    }
-
-    public void setCoverImage(SurfboardImage coverImage) {
-        this.coverImage = coverImage;
     }
 
     public void addImage(SurfboardImage image) {
