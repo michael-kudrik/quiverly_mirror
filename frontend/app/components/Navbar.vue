@@ -6,9 +6,7 @@ const themeStore = useThemeStore()
 const authStore = useAuthStore()
 
 function handleLogout() {
-  authStore.token = null
-  authStore.username = null
-  return navigateTo('/login')
+  return authStore.logout()
 }
 </script>
 
