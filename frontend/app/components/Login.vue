@@ -22,7 +22,7 @@ async function handleLogin() {
 </script>
 
 <template>
-  <div class="flex h-screen items-center justify-center w-full bg-neutral">
+  <div class="flex items-center justify-center w-full">
     <div class="aura aura-lg text-primary">
       <div class="card card-border text-base-content bg-base-100 w-96">
         <div class="card-body">
