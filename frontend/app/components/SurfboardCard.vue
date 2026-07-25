@@ -29,6 +29,20 @@ const clampedRatio = computed(() => {
   const height = coverImage.value?.imageHeight || (300 + ((props.board.id * 83) % 250))
   return Math.max(2 / 3, Math.min(4 / 3, width / height))
 })
+
+// translate 9.4 to 9'4"
+const formattedLength = computed(() => {
+  const val = props.board.length
+  if (val === null || val === undefined || val === 0) return ''
+
+  const strVal = String(val)
+  if (strVal.includes('.')) {
+    const [feet, inches] = strVal.split('.')
+    return inches && inches !== '0' ? `${feet}'${inches}"` : `${feet}'`
+  }
+
+  return `${val}'`
+})
 </script>
 
 <template>
@@ -41,10 +55,22 @@ const clampedRatio = computed(() => {
       />
     </figure>
     <div class="card-body">
-      <h2 class="card-title">{{ board.model }}</h2>
-      <p>A card component has a figure, a body part, and inside body there are title and actions parts</p>
-      <div class="card-actions justify-end">
-        <button class="btn btn-primary">Buy Now</button>
+      <h2 class="card-title flex justify-between items-center">
+        <span>{{ board.model }}</span>
+        <span v-if="formattedLength">{{ formattedLength }}</span>
+      </h2>
+      <p>Shaped by <span class="font-bold">{{ board.shaper }}</span></p>
+
+      <div class="mt-3 flex items-center justify-between">
+        <div class="flex flex-wrap gap-2 items-center">
+          <div v-if="board.volume" class="badge">Volume: {{ board.volume }}L</div>
+          <div v-if="board.width" class="badge">Width: {{ board.width }}</div>
+          <div v-if="board.boardType" class="badge">{{ board.boardType }}</div>
+          <!--          <div v-if="board.purchasedAt" class="badge whitespace-nowrap">Purchased: {{ board.purchasedAt }}</div>-->
+        </div>
+        <div class="card-actions justify-end">
+          <button class="btn btn-outline">Details</button>
+        </div>
       </div>
     </div>
   </div>

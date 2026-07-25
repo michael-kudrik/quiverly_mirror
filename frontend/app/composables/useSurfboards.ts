@@ -15,6 +15,7 @@ export interface SurfBoard {
     length: number
     width: number
     volume: number
+    boardType: string
     owner: {
         username: string
         email: string

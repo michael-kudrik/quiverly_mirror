@@ -19,6 +19,7 @@ public class Surfboard {
     @NotBlank
     private String model;
 
+    private String boardType;
     private String shaper;
     @Positive
     private Double length;
@@ -40,12 +41,13 @@ public class Surfboard {
 
     }
 
-    public Surfboard(String model, String shaper, Double length, Double width, Double volume, User owner) {
+    public Surfboard(String model, String shaper, Double length, Double width, Double volume, String boardType, User owner) {
         this.model = model;
         this.shaper = shaper;
         this.length = length;
         this.width = width;
         this.volume = volume;
+        this.boardType = boardType;
         this.owner = owner;
         this.purchasedAt = LocalDate.now();
     }
@@ -64,6 +66,14 @@ public class Surfboard {
 
     public void setModel(String model) {
         this.model = model;
+    }
+
+    public String getBoardType() {
+        return boardType;
+    }
+
+    public void setBoardType(String boardType) {
+        this.boardType = boardType;
     }
 
     public String getShaper() {

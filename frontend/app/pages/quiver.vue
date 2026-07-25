@@ -12,6 +12,7 @@ const api = useApi();
 const form = reactive({
   model: '',
   shaper: '',
+  boardType: '',
   length: null as number | null,
   width: null as number | null,
   volume: null as number | null,
@@ -22,6 +23,7 @@ const form = reactive({
 function resetForm() {
   form.model = ''
   form.shaper = ''
+  form.boardType = ''
   form.length = null
   form.width = null
   form.volume = null
@@ -42,6 +44,7 @@ async function handleSubmit() {
     const payload = {
       model: form.model,
       shaper: form.shaper,
+      boardType: form.boardType || null,
       length: form.length || 0,
       width: form.width || 0,
       volume: form.volume || 0,
@@ -143,11 +146,34 @@ function compressImage(file: File): Promise<Blob | File> {
           <form @submit.prevent="handleSubmit">
             <input v-model="form.model" type="text" class="input validator mb-2" placeholder="Model"/>
             <input v-model="form.shaper" type="text" class="input mb-2" placeholder="Shaper"/>
-            <input v-model="form.volume" min="10" max="150" type="number" class="input mb-2"
-                   placeholder="Volume (Liters)"/>
-            <div class="flex mb-1">
-              <input v-model="form.length" type="number" class="input" placeholder="Length"/>
-              <input v-model="form.width" type="number" class="input" placeholder="Width"/>
+            <div class="grid grid-cols-2 gap-x-1">
+              <input v-model="form.volume" step="any" min="10" max="150" type="number"
+                     class="input mb-2 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                     placeholder="Volume (Liters)"/>
+              <select v-model="form.boardType" class="select select-md">
+                <option value="" disabled selected>Type</option>
+                <option value="Longboard">Longboard</option>
+                <option value="Shortboard">Shortboard</option>
+                <option value="Mid-Length">Mid-Length</option>
+                <option value="Funboard">Funboard</option>
+                <option value="Fish">Fish</option>
+                <option value="Hybrid">Hybrid</option>
+                <option value="Gun">Gun</option>
+                <option value="Foamie">Foamie</option>
+                <option value="Egg">Egg</option>
+                <option value="Groveler">Groveler</option>
+                <option value="Asymmetrical">Asymmetrical</option>
+                <option value="SUP">SUP</option>
+                <option value="Step-Up">Step-Up</option>
+              </select>
+            </div>
+            <div class="flex mb-1 gap-x-1">
+              <input v-model="form.length" step="any" type="number"
+                     class="input [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                     placeholder="Length"/>
+              <input v-model="form.width" step="any" type="number"
+                     class="input [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                     placeholder="Width"/>
             </div>
             <label>Date Purchased</label>
             <input v-model="form.purchasedAt" type="date" class="input"/>

@@ -82,6 +82,7 @@ public class SurfboardController {
                 updatedSurfboard.getLength(),
                 updatedSurfboard.getWidth(),
                 updatedSurfboard.getVolume(),
+                updatedSurfboard.getBoardType(),
                 updatedSurfboard.getPurchasedAt()
         );
     }

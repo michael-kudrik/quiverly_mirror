@@ -47,7 +47,7 @@ public class SurfboardService {
     }
 
     @Transactional
-    public void updateSurfboard(Long surfboardId, String model, String shaper, Double length, Double width, Double volume, LocalDate purchasedAt) {
+    public void updateSurfboard(Long surfboardId, String model, String shaper, Double length, Double width, Double volume, String boardType, LocalDate purchasedAt) {
         // get existing surfboard by id from db
         Surfboard surfboard = surfboardRepository.findById(surfboardId)
                 .orElseThrow(() -> new SurfboardNotFoundException(surfboardId));
@@ -57,6 +57,7 @@ public class SurfboardService {
         if (length != null) surfboard.setLength(length);
         if (width != null) surfboard.setWidth(width);
         if (volume != null) surfboard.setVolume(volume);
+        if (boardType != null) surfboard.setBoardType(boardType);
         if (purchasedAt != null) surfboard.setPurchasedAt(purchasedAt);
     }
 
