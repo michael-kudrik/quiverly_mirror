@@ -22,7 +22,7 @@ public class SurfboardImage {
 
     // tracks if an image is the cover for a board
     @Column(name = "is_cover", nullable = false)
-    private boolean isCover = false;
+    private boolean cover = false;
 
     private LocalDateTime createdAt = LocalDateTime.now();
     private LocalDateTime updatedAt = LocalDateTime.now();
@@ -76,11 +76,11 @@ public class SurfboardImage {
     }
 
     public boolean isCover() {
-        return isCover;
+        return cover;
     }
 
-    public void setCover(boolean isCover) {
-        this.isCover = isCover;
+    public void setCover(boolean cover) {
+        this.cover = cover;
     }
 
     public Long getId() {

@@ -22,7 +22,11 @@ public class WebConfig implements WebMvcConfigurer {
         } catch (IOException e) {
             throw new RuntimeException("Unable to create upload directory :/", e);
         }
+        String location = uploadPath.toUri().toString();
+        if (!location.endsWith("/")) {
+            location += "/";
+        }
         // maps the public URL pattern to physical filesystem location
-        registry.addResourceHandler("/uploads/**").addResourceLocations(uploadPath.toUri().toString());
+        registry.addResourceHandler("/uploads/**").addResourceLocations(location);
     }
 }

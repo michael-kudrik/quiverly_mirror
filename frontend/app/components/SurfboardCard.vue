@@ -4,8 +4,11 @@ import type {SurfBoard} from '~/composables/useSurfboards'
 
 const props = defineProps<{ board: SurfBoard }>()
 
+// check if cover image exists and search for it
+// if none exist, fallback
 const coverImage = computed(() => {
-  return props.board.images?.find(img => img.isCover) || props.board.images?.[0]
+  if (!props.board.images || props.board.images.length === 0) return null
+  return props.board.images.find(img => img.cover) || props.board.images[0]
 })
 
 // random ahh fallback for if there are no board images found

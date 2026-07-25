@@ -28,7 +28,7 @@ const displayBoards = computed(() => {
       <span>Error! Task failed successfully.</span>
     </div>
   </div>
-  <div v-if="status === 'success'" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 items-start">
+  <div v-if="status === 'success'" class="p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 items-start">
     <SurfboardCard
         v-for="board in displayBoards"
         :key="board.id"

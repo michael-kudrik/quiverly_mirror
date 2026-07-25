@@ -6,7 +6,7 @@ export interface SurfboardImage {
     url: string
     imageWidth: number
     imageHeight: number
-    isCover: boolean
+    cover: boolean
 }
 
 export interface SurfBoard {

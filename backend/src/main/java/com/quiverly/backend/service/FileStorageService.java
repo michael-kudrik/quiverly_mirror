@@ -18,7 +18,7 @@ import java.util.UUID;
 public class FileStorageService {
 
     // set the allowed types of images. I plan on using webp, but if I cant convert a mime type this will be fine
-    private static final Set<String> ALLOWED_TYPES = Set.of("image/webp", "image/jpeg", "image/png");
+    private static final Set<String> ALLOWED_TYPES = Set.of("image/webp", "image/jpeg", "image/png", "application/octet-stream");
 
     @Value("${app.uploads:uploads}")
     private String uploadDir;
@@ -49,7 +49,7 @@ public class FileStorageService {
             // copy input stream to destination path, replacing existing
             Files.copy(file.getInputStream(), destinationFile, StandardCopyOption.REPLACE_EXISTING);
 
-            // validate with ImageIO (nice cuz we can also get dimensions at this step)
+            // validate with ImageIO (turns out ImageIO does not support webp, so twelvemonkeys solves that also monke cool)
             BufferedImage img = ImageIO.read(destinationFile.toFile());
             if (img == null) {
                 Files.deleteIfExists(destinationFile);
