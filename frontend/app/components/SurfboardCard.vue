@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {computed} from 'vue'
 import type {SurfBoard} from '~/composables/useSurfboards'
+import {getImageUrl} from '~/composables/useSurfboards'
 
 const props = defineProps<{ board: SurfBoard }>()
 
@@ -11,15 +12,8 @@ const coverImage = computed(() => {
   return props.board.images.find(img => img.cover) || props.board.images[0]
 })
 
-// random ahh fallback for if there are no board images found
-const fallbacks = [
-  "https://images.unsplash.com/photo-1502680390469-be75c86b636f?w=600&auto=format&fit=crop&q=80",
-]
-
 const resolvedImageUrl = computed(() => {
-  const url = coverImage.value?.url
-  if (!url) return fallbacks[props.board.id % fallbacks.length]
-  return url.startsWith('/') ? `http://localhost:8080${url}` : url // this resolves the local images to fetch from backend, will need to change
+  return getImageUrl(coverImage.value?.url)
 })
 
 
@@ -69,7 +63,7 @@ const formattedLength = computed(() => {
           <!--          <div v-if="board.purchasedAt" class="badge whitespace-nowrap">Purchased: {{ board.purchasedAt }}</div>-->
         </div>
         <div class="card-actions justify-end">
-          <button class="btn btn-outline">Details</button>
+          <button class="btn btn-outline" @click="$emit('details', board)">Details</button>
         </div>
       </div>
     </div>

@@ -87,4 +87,17 @@ public class FileStorageService {
             default -> ".webp";
         };
     }
+
+    // delete local file
+    public void deleteFile(String fileUrl) {
+        if (fileUrl == null || fileUrl.isEmpty()) return;
+        try {
+            String filename = fileUrl.substring(fileUrl.lastIndexOf("/") + 1);
+            Path surfboardUploadPath = Path.of(uploadDir, "surfboards").toAbsolutePath().normalize();
+            Path filePath = surfboardUploadPath.resolve(filename).normalize();
+            Files.deleteIfExists(filePath);
+        } catch (IOException e) {
+            System.err.println("Failed to delete file ಠ_ಠ " + fileUrl + " - " + e.getMessage());
+        }
+    }
 }

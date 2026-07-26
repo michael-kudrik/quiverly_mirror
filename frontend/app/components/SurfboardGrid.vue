@@ -2,6 +2,8 @@
 import {computed} from 'vue'
 import SurfboardCard from "~/components/SurfboardCard.vue";
 
+defineEmits(['details'])
+
 const {getMyBoards} = useSurfboards()
 const {data: boardsData, status} = getMyBoards()
 
@@ -33,6 +35,7 @@ const displayBoards = computed(() => {
         v-for="board in displayBoards"
         :key="board.id"
         :board="board"
+        @details="$emit('details', $event)"
     />
   </div>
 </template>

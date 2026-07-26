@@ -2,15 +2,20 @@
 import tailwindcss from "@tailwindcss/vite";
 
 export default defineNuxtConfig({
-  compatibilityDate: '2025-07-15',
-  devtools: { enabled: true },
-  telemetry: false,
-  vite: {
-    optimizeDeps: {
-      include: []
+    compatibilityDate: '2025-07-15',
+    devtools: {enabled: true},
+    telemetry: false,
+    vite: {
+        optimizeDeps: {
+            include: []
+        },
+        plugins: [tailwindcss() as any],
     },
-    plugins: [tailwindcss() as any],
-  },
-  css: ['~/assets/main.css'],
-  modules: ['@pinia/nuxt', '@nuxt/fonts',],
+    css: ['~/assets/main.css'],
+    modules: ['@pinia/nuxt', '@nuxt/fonts',],
+    runtimeConfig: {
+        public: {
+            apiBase: 'http://localhost:8080'
+        }
+    }
 })

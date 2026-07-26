@@ -3,9 +3,11 @@ export default defineNuxtPlugin((nuxtApp) => {
     const token = useCookie('token')
     const username = useCookie('username')
 
+    const config = useRuntimeConfig()
+
     // custom fetch instance
     const api = $fetch.create({
-        baseURL: 'http://localhost:8080',
+        baseURL: config.public.apiBase,
 
         // before every request, check if token exists or create empty obj
         onRequest({options}) {

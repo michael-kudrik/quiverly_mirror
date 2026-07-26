@@ -1,13 +1,36 @@
 <script setup lang="ts">
 import {AddLine, CloseMediumFill} from "@mingcute/vue"
-import {useSurfboards} from "~/composables/useSurfboards"
+import {useSurfboards, SURFBOARD_TYPES, type SurfBoard} from "~/composables/useSurfboards"
+import SurfboardDetailModal from "~/components/SurfboardDetailModal.vue"
 import Compressor from "compressorjs"
 
-const {addBoard} = useSurfboards();
+const {addBoard, getMyBoards} = useSurfboards();
 const modalRef = ref<HTMLElement | null>(null);
 const submitting = ref(false);
 const error = ref('');
 const api = useApi();
+
+const selectedBoard = ref<SurfBoard | null>(null);
+
+function openBoardDetails(board: SurfBoard) {
+  selectedBoard.value = board
+}
+
+async function handleBoardUpdated() {
+  await refreshNuxtData('my-boards')
+  const { data: freshBoards } = getMyBoards()
+  if (freshBoards.value && selectedBoard.value) {
+    const updated = freshBoards.value.find(b => b.id === selectedBoard.value?.id)
+    if (updated) {
+      selectedBoard.value = updated
+    }
+  }
+}
+
+async function handleBoardDeleted() {
+  selectedBoard.value = null
+  await refreshNuxtData('my-boards')
+}
 
 const form = reactive({
   model: '',
@@ -128,7 +151,15 @@ function compressImage(file: File): Promise<Blob | File> {
 </script>
 
 <template>
-  <SurfboardGrid/>
+  <SurfboardGrid @details="openBoardDetails" />
+  
+  <SurfboardDetailModal
+    :board="selectedBoard"
+    @close="selectedBoard = null"
+    @updated="handleBoardUpdated"
+    @deleted="handleBoardDeleted"
+  />
+
   <div ref="modalRef" class="modal" id="add-board-modal" popover>
     <div class="modal-box relative">
       <div class="absolute right-2 top-2">
@@ -152,19 +183,7 @@ function compressImage(file: File): Promise<Blob | File> {
                      placeholder="Volume (Liters)"/>
               <select v-model="form.boardType" class="select select-md">
                 <option value="" disabled selected>Type</option>
-                <option value="Longboard">Longboard</option>
-                <option value="Shortboard">Shortboard</option>
-                <option value="Mid-Length">Mid-Length</option>
-                <option value="Funboard">Funboard</option>
-                <option value="Fish">Fish</option>
-                <option value="Hybrid">Hybrid</option>
-                <option value="Gun">Gun</option>
-                <option value="Foamie">Foamie</option>
-                <option value="Egg">Egg</option>
-                <option value="Groveler">Groveler</option>
-                <option value="Asymmetrical">Asymmetrical</option>
-                <option value="SUP">SUP</option>
-                <option value="Step-Up">Step-Up</option>
+                <option v-for="type in SURFBOARD_TYPES" :key="type" :value="type">{{ type }}</option>
               </select>
             </div>
             <div class="flex mb-1 gap-x-1">

@@ -87,5 +87,27 @@ public class SurfboardController {
         );
     }
 
+    // delete surfboard image
+    @DeleteMapping(path = "/{surfboardId}/images/{imageId}")
+    public ResponseEntity<Void> deleteImage(
+            @PathVariable Long surfboardId,
+            @PathVariable Long imageId,
+            Principal principal
+    ) {
+        surfboardService.deleteImageFromSurfboard(surfboardId, imageId, principal.getName());
+        return ResponseEntity.noContent().build();
+    }
+
+    // set the cover image
+    @PutMapping(path = "/{surfboardId}/images/{imageId}/cover")
+    public ResponseEntity<Void> setCoverImage(
+            @PathVariable Long surfboardId,
+            @PathVariable Long imageId,
+            Principal principal
+    ) {
+        surfboardService.setCoverImage(surfboardId, imageId, principal.getName());
+        return ResponseEntity.ok().build();
+    }
+
 }
 

@@ -31,6 +31,31 @@ export interface SurfBoard {
 
 export type CreateSurfboardInput = Omit<SurfBoard, 'id' | 'owner'>
 
+export const SURFBOARD_TYPES = [
+    'Longboard',
+    'Shortboard',
+    'Mid-Length',
+    'Funboard',
+    'Fish',
+    'Hybrid',
+    'Gun',
+    'Foamie',
+    'Egg',
+    'Groveler',
+    'Asymmetrical',
+    'SUP',
+    'Step-Up'
+] as const
+
+const DEFAULT_FALLBACK_IMAGE = "https://images.unsplash.com/photo-1502680390469-be75c86b636f?w=600&auto=format&fit=crop&q=80"
+
+export const getImageUrl = (rawUrl?: string | null): string => {
+    if (!rawUrl) return DEFAULT_FALLBACK_IMAGE
+    const config = useRuntimeConfig()
+    const apiBase = config.public.apiBase || 'http://localhost:8080'
+    return rawUrl.startsWith('/') ? `${apiBase}${rawUrl}` : rawUrl
+}
+
 export const useSurfboards = () => {
     const api = useApi() // authenticated $fetch
 
