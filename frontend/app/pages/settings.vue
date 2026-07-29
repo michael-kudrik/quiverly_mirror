@@ -1,15 +1,164 @@
 <script setup lang="ts">
+import {ref, onMounted} from 'vue'
+import {useAuthStore} from '~/stores/auth'
+import {useUser} from '~/composables/useUser'
 
+const authStore = useAuthStore()
+const { getProfile, uploadAvatar, removeAvatar } = useUser()
+
+const avatarUrl = ref<string | null>(null)
+const fileInput = ref<HTMLInputElement | null>(null)
+const selectedFile = ref<File | null>(null)
+const previewUrl = ref<string | null>(null)
+const isUploading = ref(false)
+const message = ref<{ text: string; type: 'success' | 'error' } | null>(null)
+
+onMounted(async () => {
+  if (authStore.isLoggedIn) {
+    try {
+      const profile = await getProfile()
+      if (profile.avatarUrl) {
+        avatarUrl.value = profile.avatarUrl
+      }
+    } catch (e) {
+      console.error('Failed to load profile:', e)
+    }
+  }
+})
+
+function clearSelection() {
+  if (previewUrl.value) {
+    URL.revokeObjectURL(previewUrl.value)
+    previewUrl.value = null
+  }
+  selectedFile.value = null
+  if (fileInput.value) {
+    fileInput.value.value = ''
+  }
+}
+
+function handleFileChange(event: Event) {
+  const target = event.target as HTMLInputElement
+  if (target.files && target.files[0]) {
+    if (previewUrl.value) {
+      URL.revokeObjectURL(previewUrl.value)
+    }
+    const file = target.files[0]
+    selectedFile.value = file
+    previewUrl.value = URL.createObjectURL(file)
+    message.value = null
+  }
+}
+
+async function handleUpload() {
+  if (!selectedFile.value) return
+  isUploading.value = true
+  message.value = null
+
+  try {
+    const res = await uploadAvatar(selectedFile.value)
+    avatarUrl.value = res.avatarUrl
+    authStore.avatarUrl = res.avatarUrl
+    message.value = { text: 'Profile picture updated successfully! \\(^o^)/', type: 'success' }
+    clearSelection()
+  } catch (err: any) {
+    message.value = {
+      text: err?.data?.message || 'Failed to upload profile picture. Please try again.',
+      type: 'error'
+    }
+  } finally {
+    isUploading.value = false
+  }
+}
+
+async function handleRemoveAvatar() {
+  isUploading.value = true
+  message.value = null
+  try {
+    await removeAvatar()
+    avatarUrl.value = null
+    authStore.avatarUrl = null
+    clearSelection()
+    message.value = { text: 'Profile picture removed successfully.', type: 'success' }
+  } catch (err: any) {
+    message.value = {
+      text: err?.data?.message || 'Failed to remove profile picture. Please try again.',
+      type: 'error'
+    }
+  } finally {
+    isUploading.value = false
+  }
+}
 </script>
 
 <template>
-  <div class="flex flex-col items-center justify-center">
+  <div class="max-w-4xl mx-auto py-10 px-4">
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold">Settings</h1>
+      <p class="text-base-content/70 pt-1">Manage your account preferences and personal details</p>
+    </div>
 
-    <h1 class="text-3xl mt-10">Settings</h1>
-    <h3 class="text-base-content/70 pt-2">Manage preferences and personal details</h3>
+    <!-- Alert Message -->
+    <div v-if="message" :class="['alert mb-6 shadow-sm', message.type === 'success' ? 'alert-success' : 'alert-error']">
+      <span>{{ message.text }}</span>
+    </div>
+
+    <!-- Profile Picture Card -->
+    <div class="card bg-base-100 shadow-md border border-base-200">
+      <div class="card-body">
+        <h2 class="card-title text-xl mb-4">Profile Picture</h2>
+
+        <div class="flex flex-col sm:flex-row items-center gap-6">
+          <!-- Avatar Preview -->
+          <UserAvatar :avatar-url="previewUrl || avatarUrl" class="w-24 h-24 text-3xl ring-4 ring-primary/20"/>
+
+          <!-- Controls -->
+          <div class="flex-1 flex flex-col gap-3 text-center sm:text-left">
+            <div>
+              <p class="font-medium text-sm">Upload a new avatar</p>
+              <p class="text-xs text-base-content/60">Supports PNG, JPG, or WebP format up to 5MB.</p>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-3 justify-center sm:justify-start">
+              <input
+                  ref="fileInput"
+                  type="file"
+                  accept="image/png, image/jpeg, image/webp"
+                  class="file-input file-input-bordered file-input-sm w-full max-w-xs"
+                  @change="handleFileChange"
+              />
+
+              <template v-if="selectedFile">
+                <button
+                    class="btn btn-primary btn-sm"
+                    :disabled="isUploading"
+                    @click="handleUpload"
+                >
+                  <span v-if="isUploading" class="loading loading-spinner loading-xs"></span>
+                  <span v-else>Save Avatar</span>
+                </button>
+
+                <button
+                    class="btn btn-ghost btn-sm"
+                    :disabled="isUploading"
+                    @click="clearSelection"
+                >
+                  Cancel
+                </button>
+              </template>
+
+              <button
+                  v-else-if="avatarUrl"
+                  class="btn btn-outline btn-error btn-sm"
+                  :disabled="isUploading"
+                  @click="handleRemoveAvatar"
+              >
+                Remove Avatar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
-
-<style scoped>
-
-</style>

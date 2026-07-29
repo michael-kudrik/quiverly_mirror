@@ -79,4 +79,21 @@ public class UserService {
             user.setEmail(email);
         }
     }
+
+    @Transactional
+    public String updateUserAvatar(String username, org.springframework.web.multipart.MultipartFile file, FileStorageService fileStorageService) {
+        User user = getUserByUsername(username);
+        String avatarUrl = fileStorageService.storeAvatarImage(file, user.getAvatarUrl());
+        user.setAvatarUrl(avatarUrl);
+        return avatarUrl;
+    }
+
+    @Transactional
+    public void removeUserAvatar(String username, FileStorageService fileStorageService) {
+        User user = getUserByUsername(username);
+        if (user.getAvatarUrl() != null) {
+            fileStorageService.deleteAvatarFile(user.getAvatarUrl());
+            user.setAvatarUrl(null);
+        }
+    }
 }

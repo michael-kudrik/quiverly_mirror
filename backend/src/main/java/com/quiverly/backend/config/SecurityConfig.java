@@ -51,6 +51,8 @@ public class SecurityConfig {
                             .requestMatchers(HttpMethod.DELETE, "/api/v1/surfboard/**").authenticated()
 
                             .requestMatchers(HttpMethod.GET, "/api/v1/surfboard/**").permitAll() //public surfboard list maybe?
+                            // profile management for authenticated user
+                            .requestMatchers("/api/v1/user/me/**").authenticated()
                             // admin only hehe that's me lol 0_0
                             .requestMatchers("/api/v1/user/**").hasRole("ADMIN")
                             // allow access of uploads directory

@@ -72,6 +72,58 @@ public class FileStorageService {
         }
     }
 
+    public String storeAvatarImage(MultipartFile file, String currentAvatarUrl) {
+        if (file.isEmpty()) {
+            throw new IllegalArgumentException("Empty avatar file (¬_¬)");
+        }
+
+        String contentType = file.getContentType();
+        if (contentType == null || !ALLOWED_TYPES.contains(contentType)) {
+            throw new IllegalArgumentException("Invalid file type. Only webp, jpeg, and png allowed.");
+        }
+
+        try {
+            Path avatarUploadPath = Path.of(uploadDir, "avatars").toAbsolutePath().normalize();
+            Files.createDirectories(avatarUploadPath);
+
+            String extension = getExtension(file.getOriginalFilename(), contentType);
+            String filename = UUID.randomUUID() + extension;
+            Path destinationFile = avatarUploadPath.resolve(filename).normalize();
+
+            Files.copy(file.getInputStream(), destinationFile, StandardCopyOption.REPLACE_EXISTING);
+
+            BufferedImage img = ImageIO.read(destinationFile.toFile());
+            if (img == null) {
+                Files.deleteIfExists(destinationFile);
+                throw new IllegalArgumentException("Only valid image uploads are allowed");
+            }
+
+            // delete old avatar if it exists
+            if (currentAvatarUrl != null && !currentAvatarUrl.isBlank()) {
+                deleteAvatarFile(currentAvatarUrl);
+            }
+
+            return "/uploads/avatars/" + filename;
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to store avatar file.", e);
+        }
+    }
+
+    public void deleteAvatarFile(String avatarUrl) {
+        if (avatarUrl == null || !avatarUrl.contains("/uploads/avatars/")) return;
+        try {
+            String filename = avatarUrl.substring(avatarUrl.lastIndexOf("/") + 1);
+            Path avatarUploadPath = Path.of(uploadDir, "avatars").toAbsolutePath().normalize();
+            Path filePath = avatarUploadPath.resolve(filename).normalize();
+            boolean deleted = Files.deleteIfExists(filePath);
+            if (deleted) {
+                System.out.println("Successfully deleted old avatar file: " + filename);
+            }
+        } catch (IOException e) {
+            System.err.println("Failed to delete avatar file " + avatarUrl + " - " + e.getMessage());
+        }
+    }
+
     // whitelist extensions
     // this is what they mean by defense in depth :)
     private String getExtension(String originalFilename, String contentType) {

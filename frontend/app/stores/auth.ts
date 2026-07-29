@@ -7,12 +7,15 @@ export const useAuthStore = defineStore(
         const api = useApi()
         const token = ref<string | null>(null)
         const username = ref<string | null>(null)
+        const avatarUrl = ref<string | null>(null)
 
         const isLoggedIn = computed(() => !!token.value)
 
         function logout() {
             token.value = null
             username.value = null
+            avatarUrl.value = null
+            useCookie('auth').value = null
             return navigateTo('/login')
         }
 
@@ -23,6 +26,12 @@ export const useAuthStore = defineStore(
             })
             token.value = data.token
             username.value = data.username
+
+            try {
+                const profile = await api<{ avatarUrl?: string }>('/api/v1/user/me')
+                avatarUrl.value = profile.avatarUrl || null
+            } catch (e) {}
+
             return navigateTo('/')
         }
 
@@ -34,14 +43,14 @@ export const useAuthStore = defineStore(
             return navigateTo('/login')
         }
 
-        return { token, username, isLoggedIn, login, logout, register }
+        return { token, username, avatarUrl, isLoggedIn, login, logout, register }
     },
     {
         persist: {
             storage: piniaPluginPersistedstate.cookies({
                 maxAge: 86400,
             }),
-            pick: ['token', 'username'],
+            pick: ['token', 'username', 'avatarUrl'],
         },
     }
 )
