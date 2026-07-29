@@ -12,7 +12,13 @@ export default defineNuxtConfig({
         plugins: [tailwindcss() as any],
     },
     css: ['~/assets/main.css'],
-    modules: ['@pinia/nuxt', '@nuxt/fonts',],
+    modules: ['@pinia/nuxt', '@nuxt/fonts', 'pinia-plugin-persistedstate/nuxt'],
+    piniaPluginPersistedstate: {
+        storage: 'cookies',
+        cookieOptions: {
+            sameSite: 'lax',
+        },
+    },
     runtimeConfig: {
         public: {
             apiBase: 'http://localhost:8080'

@@ -1,7 +1,6 @@
 export default defineNuxtPlugin((nuxtApp) => {
-    // retrieve cookies directly in plugin context to support SSR
-    const token = useCookie('token')
-    const username = useCookie('username')
+    // retrieve auth cookie directly in plugin context to support SSR
+    const authCookie = useCookie<{ token?: string; username?: string } | null>('auth')
 
     const config = useRuntimeConfig()
 
@@ -9,9 +8,10 @@ export default defineNuxtPlugin((nuxtApp) => {
     const api = $fetch.create({
         baseURL: config.public.apiBase,
 
-        // before every request, check if token exists or create empty obj
+        // before every request, check if token exists
         onRequest({options}) {
-            if (token.value) {
+            const token = authCookie.value?.token
+            if (token) {
                 options.headers = options.headers || {}
 
                 // convert objects to headers instance.
@@ -20,16 +20,15 @@ export default defineNuxtPlugin((nuxtApp) => {
                     : new Headers(options.headers as Record<string, string>)
 
                 // ** inject auth header with the bearer token **
-                headers.set('Authorization', `Bearer ${token.value}`)
+                headers.set('Authorization', `Bearer ${token}`)
                 options.headers = headers
             }
         },
 
-        // if token is expired, clear cookies and move to login page
+        // if token is expired, clear auth cookie and move to login page
         onResponseError({response}) {
             if (response.status === 401) {
-                token.value = null
-                username.value = null
+                authCookie.value = null
                 nuxtApp.runWithContext(() => navigateTo('/login'))
             }
         }
