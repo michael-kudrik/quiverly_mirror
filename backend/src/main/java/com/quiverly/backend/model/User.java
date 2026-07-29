@@ -45,6 +45,7 @@ public class User {
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    @SuppressWarnings("unused")
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     @JsonIgnore
     private final List<Surfboard> surfboards = new ArrayList<>();
@@ -52,11 +53,11 @@ public class User {
     public User() {
     }
 
-    public User(String username, String password, String email) {
-        this.username = username;
-        this.password = password;
-        this.email = email;
-    }
+//    public User(String username, String password, String email) {
+//        this.username = username;
+//        this.password = password;
+//        this.email = email;
+//    }
 
     public enum Role {
         USER, ADMIN
@@ -64,25 +65,58 @@ public class User {
 
     // --- GETTERS AND SETTERS ---
 
-    public Role getRole() { return role; }
-    public void setRole(Role role) { this.role = role; }
+    public Role getRole() {
+        return role;
+    }
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public void setRole(Role role) {
+        this.role = role;
+    }
 
-    public String getUsername() { return username; }
-    public void setUsername(String username) { this.username = username; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getPassword() { return password; }
-    public void setPassword(String password) { this.password = password; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
+    public String getUsername() {
+        return username;
+    }
 
-    public String getAvatarUrl() { return avatarUrl; }
-    public void setAvatarUrl(String avatarUrl) { this.avatarUrl = avatarUrl; }
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
-    public LocalDateTime getCreatedAt() { return createdAt; }
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
+    }
+
+    @SuppressWarnings("unused")
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
 
 
     @Override

@@ -1,5 +1,6 @@
 package com.quiverly.backend.controller;
 
+import com.quiverly.backend.dto.PasswordChangeRequest;
 import com.quiverly.backend.model.User;
 import com.quiverly.backend.service.FileStorageService;
 import com.quiverly.backend.service.UserService;
@@ -15,14 +16,14 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping(path="/api/v1/user")
+@RequestMapping(path = "/api/v1/user")
 public class UserController {
 
     private final UserService userService;
     private final FileStorageService fileStorageService;
 
     @Autowired
-    public UserController(UserService userService, FileStorageService fileStorageService){
+    public UserController(UserService userService, FileStorageService fileStorageService) {
         this.userService = userService;
         this.fileStorageService = fileStorageService;
     }
@@ -41,6 +42,13 @@ public class UserController {
         return ResponseEntity.ok(Map.of("avatarUrl", avatarUrl));
     }
 
+    @PutMapping(path = "/me/password")
+    public ResponseEntity<Void> updatePassword(@Valid @RequestBody PasswordChangeRequest request, Principal principal) {
+        userService.updateUserPassword(principal.getName(), request.getCurrentPassword(), request.getNewPassword());
+        return ResponseEntity.noContent().build();
+    }
+
+
     @DeleteMapping(path = "/me/avatar")
     public ResponseEntity<Void> deleteAvatar(Principal principal) {
         userService.removeUserAvatar(principal.getName(), fileStorageService);
@@ -48,23 +56,23 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> getUsers(){
+    public List<User> getUsers() {
         return userService.getUsers();
     }
 
     @PostMapping
-    public void registerNewUser(@Valid @RequestBody User user){
+    public void registerNewUser(@Valid @RequestBody User user) {
         userService.addNewUser(user);
     }
 
     @DeleteMapping(path = "{userId}")
-    public void deleteUser(@PathVariable("userId")Long userId){
+    public void deleteUser(@PathVariable("userId") Long userId) {
         userService.deleteUser(userId);
     }
 
     @PutMapping(path = "{userId}")
     public void updateUser(@PathVariable("userId") Long userId,
-                           @Valid @RequestBody com.quiverly.backend.dto.UserUpdateRequest request){
+                           @Valid @RequestBody com.quiverly.backend.dto.UserUpdateRequest request) {
         userService.updateUser(userId, request.getUsername(), request.getEmail());
     }
 }

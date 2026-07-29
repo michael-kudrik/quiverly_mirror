@@ -4,9 +4,12 @@ public class LoginRequest {
     private String username;
     private String password;
 
-    public LoginRequest(){}
+    @SuppressWarnings("unused")
+    public LoginRequest() {
+    }
 
-    public LoginRequest(String username, String password){
+    @SuppressWarnings("unused")
+    public LoginRequest(String username, String password) {
         this.username = username;
         this.password = password;
     }

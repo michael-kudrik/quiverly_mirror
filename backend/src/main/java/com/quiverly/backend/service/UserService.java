@@ -8,6 +8,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -95,5 +96,17 @@ public class UserService {
             fileStorageService.deleteAvatarFile(user.getAvatarUrl());
             user.setAvatarUrl(null);
         }
+    }
+
+    @Transactional
+    public void updateUserPassword(String username, String currentPassword, String newPassword) {
+
+        User user = getUserByUsername(username);
+
+        if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
+            throw new IllegalStateException("Current password is wrong");
+        }
+
+        user.setPassword(passwordEncoder.encode(newPassword));
     }
 }
