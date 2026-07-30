@@ -4,7 +4,7 @@ import {useAuthStore} from '~/stores/auth'
 import {useUser} from '~/composables/useUser'
 
 const authStore = useAuthStore()
-const { getProfile, uploadAvatar, removeAvatar } = useUser()
+const {getProfile, uploadAvatar, removeAvatar} = useUser()
 
 const avatarUrl = ref<string | null>(null)
 const fileInput = ref<HTMLInputElement | null>(null)
@@ -59,7 +59,7 @@ async function handleUpload() {
     const res = await uploadAvatar(selectedFile.value)
     avatarUrl.value = res.avatarUrl
     authStore.avatarUrl = res.avatarUrl
-    message.value = { text: 'Profile picture updated successfully! \\(^o^)/', type: 'success' }
+    message.value = {text: 'Profile picture updated successfully! \\(^o^)/', type: 'success'}
     clearSelection()
   } catch (err: any) {
     message.value = {
@@ -79,7 +79,7 @@ async function handleRemoveAvatar() {
     avatarUrl.value = null
     authStore.avatarUrl = null
     clearSelection()
-    message.value = { text: 'Profile picture removed successfully.', type: 'success' }
+    message.value = {text: 'Profile picture removed successfully.', type: 'success'}
   } catch (err: any) {
     message.value = {
       text: err?.data?.message || 'Failed to remove profile picture. Please try again.',
@@ -87,6 +87,37 @@ async function handleRemoveAvatar() {
     }
   } finally {
     isUploading.value = false
+  }
+}
+
+
+const currentPassword = ref("")
+const newPassword = ref("")
+const confirmNewPassword = ref("")
+const {changePassword} = useUser()
+const isLoading = ref(false)
+
+async function handlePasswordChange() {
+  isLoading.value = true
+
+  if (currentPassword.value === newPassword.value) {
+    isLoading.value = false
+    message.value = {text: 'Passwords cannot be the same!', type: 'error'}
+    return
+  } else if (newPassword.value !== confirmNewPassword.value) {
+    isLoading.value = false
+    message.value = {text: 'Both fields must have matching new passwords!', type: 'error'}
+    return
+  }
+  try {
+    await changePassword(currentPassword.value, newPassword.value)
+    currentPassword.value = ""
+    newPassword.value = ""
+    message.value = {text: 'Password changed successfully.', type: 'success'}
+  } catch (err: any) {
+    message.value = {text: err?.data.message || 'Failed to change password.', type: 'error'}
+  } finally {
+    isLoading.value = false
   }
 }
 </script>
@@ -158,6 +189,61 @@ async function handleRemoveAvatar() {
             </div>
           </div>
         </div>
+      </div>
+    </div>
+    <div class="card bg-base-100 shadow-md border border-base-200 mt-6">
+      <div class="card-body">
+        <h2 class="card-title text-xl mb-4">Change Password</h2>
+        <form @submit.prevent="handlePasswordChange" class="flex flex-col gap-4 max-w-md">
+          <div class="form-control">
+            <label class="label pb-1">
+              <span class="label-text font-medium text-sm">Current Password</span>
+            </label>
+            <input
+                v-model="currentPassword"
+                type="password"
+                required
+                class="input input-bordered w-full"
+            />
+          </div>
+
+          <div class="form-control">
+            <label class="label pb-1">
+              <span class="label-text font-medium text-sm">New Password</span>
+            </label>
+            <input
+                v-model="newPassword"
+                type="password"
+                required
+                minlength="8"
+                pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+                title="Must be more than 8 characters, including number, lowercase letter, uppercase letter"
+                class="input input-bordered w-full"
+            />
+          </div>
+
+          <div class="form-control">
+            <label class="label pb-1">
+              <span class="label-text font-medium text-sm">Confirm New Password</span>
+            </label>
+            <input
+                v-model="confirmNewPassword"
+                type="password"
+                required
+                minlength="8"
+                pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+                title="Must be more than 8 characters, including number, lowercase letter, uppercase letter"
+                class="input input-bordered w-full"
+            />
+          </div>
+
+          <div class="pt-2">
+            <button type="submit" class="btn btn-primary sm:w-auto w-full" :disabled="isLoading">
+              <span v-if="isLoading" class="loading loading-spinner loading-xs"></span>
+              <span>Update Password</span>
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   </div>

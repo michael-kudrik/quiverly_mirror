@@ -31,9 +31,20 @@ export const useUser = () => {
         })
     }
 
+    const changePassword = async (currentPassword: string, newPassword: string) => {
+
+        return await api('/api/v1/user/me/password', {
+            method: 'PUT', body: {
+                currentPassword,
+                newPassword
+            }
+        })
+    }
+
     return {
         getProfile,
         uploadAvatar,
-        removeAvatar
+        removeAvatar,
+        changePassword
     }
 }
